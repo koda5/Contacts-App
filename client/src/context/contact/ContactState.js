@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 import ContactContext from './contactContext';
 import contactReducer from './contactReducer';
 import {
@@ -21,7 +21,7 @@ const ContactState = props => {
                 name: "Mila Krsteva Panova",
                 email: "milak@yahoo.com",
                 phone: '11111111111',
-                type: 'personal'
+                type: 'professional'
 
             },
             {
@@ -38,15 +38,67 @@ const ContactState = props => {
                 phone: '1274566668',
                 type: 'personal'
             }
-        ]
+        ],
+        current: null,
+        filtered: null
     };
 
     const [state, dispatch] = useReducer(contactReducer, initialState);
 
+    // Add contact
+
+    const addContact = contact => {
+        contact.id = uuid();
+        dispatch({ type: ADD_CONTACT, payload: contact });
+    }
+
+    // Delete Contact
+
+    const deleteContact = id => {
+        dispatch({ type: DELETE_CONTACT, payload: id })
+    }
+
+    // Set Contact
+
+    const setCurrent = contact => {
+        dispatch({ type: SET_CURRENT, payload: contact })
+    }
+    // Clear Contact
+    const clearCurrent = contact => {
+        dispatch({ type: CLEAR_CURRENT })
+    }
+
+    // Update Contact
+
+    const updateContact = contact => {
+        dispatch({ type: UPDATE_CONTACT, payload: contact })
+    }
+
+    // Filter Contact
+
+    const filterContacts = text => {
+        dispatch({ type: FILTER_CONTACT, payload: text })
+    }
+
+    //Clear Filter
+
+    const clearFilter = () => {
+        dispatch({ type: CLEAR_FILTER })
+    }
+
     return (
         <ContactContext.Provider
             value={{
-                contacts: state.contacts
+                contacts: state.contacts,
+                current: state.current,
+                filtered: state.filtered,
+                addContact,
+                deleteContact,
+                setCurrent,
+                clearCurrent,
+                updateContact,
+                filterContacts,
+                clearFilter
             }}
         >
             {props.children}
